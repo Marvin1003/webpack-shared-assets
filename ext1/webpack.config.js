@@ -35,25 +35,25 @@ const config = {
         use: {
           loader: "file-loader",
           options: {
-            name(file) {
+            name(filePath) {
               const fileName = R.compose(
                 R.last,
                 R.split("/")
-              )(file);
+              )(filePath);
 
               /* 
                 Trying to dynamically find the referenced file in the output folder of the targeted extension,
                 to be able to just reference the already existing file instead of rebuilding it.
               */
-              const targetFile = R.compose(
+              const targetFilePath = R.compose(
                 R.find(R.includes(fileName)),
                 R.map(R.path(["path"])),
                 klawSync, // get all output files of the target extension
                 getOutputPath
               )(ext2);
 
-              if (targetFile) {
-                return path.relative(__dirname, targetFile);
+              if (R.equals(R.type(targetFilePath, "String"))) {
+                return path.relative(__dirname, targetFilePath);
               } else {
                 throw new Error(
                   `Couldn't find ${fileName} in ${getOutputPath(ext2)}`
