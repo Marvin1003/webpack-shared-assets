@@ -38,7 +38,7 @@ const config = {
             name(file) {
               const fileName = R.compose(
                 R.last,
-                v => v.split("/")
+                R.split("/")
               )(file);
 
               /* 
@@ -46,8 +46,8 @@ const config = {
                 to be able to just reference the already existing file instead of rebuilding it.
               */
               const targetFile = R.compose(
-                R.curryN(2, findMatch)(fileName),
-                arr => R.map(obj => R.path(["path"], obj), arr),
+                R.find(R.includes(fileName)),
+                R.map(R.path(["path"])),
                 klawSync, // get all output files of the target extension
                 getOutputPath
               )(ext2);
@@ -76,20 +76,13 @@ const config = {
 
 module.exports = config;
 
-function findMatch(fileName, files) {
-  return R.find(path => R.includes(fileName, path), files);
-}
-
 function getOutputPath(ext) {
   if (R.has("output")(ext) && R.equals(R.type(ext.output), "Object")) {
     if (R.has("path")(ext.output)) {
       if (R.equals(R.type(ext.output.path), "Function")) {
-        let outputPath = R.tryCatch(
-          () => ext.output.path(),
-          err => {
-            throw new Error(`Something went wrong -> ${err}`);
-          }
-        )();
+        let outputPath = R.tryCatch(ext.output.path, err => {
+          throw new Error(`Something went wrong -> ${err}`);
+        })();
 
         if (R.equals(R.type(outputPath), "String")) {
           return path.relative(__dirname, outputPath);
