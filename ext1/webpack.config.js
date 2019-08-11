@@ -77,19 +77,17 @@ const config = {
 module.exports = config;
 
 function getOutputPath(ext) {
-  if (R.has("output")(ext) && R.equals(R.type(ext.output), "Object")) {
-    if (R.has("path")(ext.output)) {
-      if (R.equals(R.type(ext.output.path), "Function")) {
-        let outputPath = R.tryCatch(ext.output.path, err => {
-          throw new Error(`Something went wrong -> ${err}`);
-        })();
+  if (R.hasPath(["output", "path"])(ext)) {
+    if (R.equals(R.type(ext.output.path), "Function")) {
+      let outputPath = R.tryCatch(ext.output.path, err => {
+        throw new Error(`Something went wrong -> ${err}`);
+      })();
 
-        if (R.equals(R.type(outputPath), "String")) {
-          return path.relative(__dirname, outputPath);
-        }
-      } else if (R.equals(R.type(ext.output.path), "String")) {
-        return path.relative(__dirname, ext.output.path);
+      if (R.equals(R.type(outputPath), "String")) {
+        return path.relative(__dirname, outputPath);
       }
+    } else if (R.equals(R.type(ext.output.path), "String")) {
+      return path.relative(__dirname, ext.output.path);
     }
   }
 
