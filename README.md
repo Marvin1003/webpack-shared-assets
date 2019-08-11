@@ -1,0 +1,1 @@
+# webpack-shared-assets
