@@ -1,0 +1,7 @@
+/*
+  in order to be able to reference this file from another extension you can't use aliases to make the imports easier, as the other extension doesn't know about the aliases 
+*/
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto/Roboto-Regular.ttf");
+}

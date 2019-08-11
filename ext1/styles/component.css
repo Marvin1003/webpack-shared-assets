@@ -1,0 +1,10 @@
+@import "~ext2/styles/shared.css";
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("~fonts/OpenSans/OpenSans-Regular.ttf");
+}
+
+body {
+  font-family: "Quattrocento";
+}
